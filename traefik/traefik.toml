@@ -1,0 +1,31 @@
+#Comment out when done.
+logLevel = "DEBUG"
+
+defaultEntryPoints = ["http","https"]
+
+[entryPoints]
+  [entryPoints.traefik]
+    #Run Traefik dashboard at 8080.
+    address = ":8080"
+  [entryPoints.http]
+    #redirect ALL http traffic to https 443
+    address = ":80"
+    [entryPoints.http.redirect]
+      entryPoint = "https"
+  [entryPoints.https]
+    address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      certFile = "/traefik.crt"
+      keyFile = "/traefik.key"
+
+# enable the Traefik dashboard
+[api]
+  dashboard = true
+  entryPoint = "traefik"
+
+#Watch Docker, when new containers are created with label create mapping.
+[docker]
+  endpoint = "unix:///var/run/docker.sock"
+  domain = "dev"
+  watch = true
