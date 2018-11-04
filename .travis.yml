@@ -1,7 +1,7 @@
 ---
 sudo: required
 dist: trusty
-
+language: generic
 services:
   - docker
 
@@ -23,4 +23,4 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - ./setup.sh 
+  - chmod +x setup.sh && ./setup.sh 
