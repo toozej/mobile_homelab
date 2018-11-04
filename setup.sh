@@ -38,7 +38,7 @@ fi
 if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/traefik.key" ] || [ ! -f "$MOBILE_HOMELAB_DIR/traefik/traefik.crt" ]; then
     echo "generating openssl key & crt for Traefik"
     cd $MOBILE_HOMELAB_DIR/traefik
-    $OPENSSL_BIN req -newkey rsa:2048 -nodes -keyout traefik.key -x509 -days 9999 -out traefik.crt
+    $OPENSSL_BIN req -newkey rsa:2048 -nodes -keyout traefik.key -x509 -days 9999 -out traefik.crt -subj "/C=US/ST=Oregon/L=Portland/O=mobile_homelab/CN=mobile_homelab.test"
 else
     echo "traefik.key and traefik.crt already exist, skipping."
 fi
