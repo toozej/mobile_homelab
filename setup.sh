@@ -54,7 +54,7 @@ fi
 for PROJECT in `find $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d`; do
     if [ ! -f "$PROJECT/.do_not_autorun" ]; then
         echo "starting docker-compose project in $PROJECT"
-        sudo $DOCKER_COMPOSE_BIN -f $PROJECT up --build -d
+        sudo $DOCKER_COMPOSE_BIN -f $PROJECT/docker-compose.yml up --build -d
     else
         echo "$PROJECT set to not auto-run, remove $PROJECT/.do_not_autorun if you want to change this."
     fi
