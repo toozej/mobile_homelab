@@ -25,14 +25,14 @@ else
     git pull
 fi
 
-HOSTFILE_ENTRY_TRAEFIK=`grep traefik.dev /etc/hosts`
-HOSTFILE_ENTRY_JENKINS=`grep jenkins.dev /etc/hosts`
+HOSTFILE_ENTRY_TRAEFIK=`grep traefik.test /etc/hosts`
+HOSTFILE_ENTRY_JENKINS=`grep jenkins.test /etc/hosts`
 if [ -z "$HOSTFILE_ENTRY_TRAEFIK" ] || [ -z "$HOSTFILE_ENTRY_JENKINS" ]; then
     echo "including hostfile entries"
-    echo "127.0.0.1 traefik.dev" | sudo tee -a /etc/hosts
-    echo "127.0.0.1 jenkins.dev" | sudo tee -a /etc/hosts
+    echo "127.0.0.1 traefik.test" | sudo tee -a /etc/hosts
+    echo "127.0.0.1 jenkins.test" | sudo tee -a /etc/hosts
 else
-    echo "hostfile entries for traefik.dev and jenkins.dev already exist, skipping"
+    echo "hostfile entries for traefik.test and jenkins.test already exist, skipping"
 fi
 
 if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/traefik.key" ] || [ ! -f "$MOBILE_HOMELAB_DIR/traefik/traefik.crt" ]; then

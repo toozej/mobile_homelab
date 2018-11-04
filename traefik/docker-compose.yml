@@ -17,7 +17,7 @@ services:
       - "./acme.json:/acme.json"
     labels:
       - "traefik.port=8080"
-      - "traefik.frontend.rule=Host:traefik.dev"
+      - "traefik.frontend.rule=Host:traefik.test"
 networks:
   traefik:
     external:
