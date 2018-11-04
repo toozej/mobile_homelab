@@ -4,8 +4,8 @@ DOCKER_BIN=`which docker`
 DOCKER_COMPOSE_BIN=`which docker-compose`
 OPENSSL_BIN=`which openssl`
 
-DOCKER_DIR="~/docker"
-MOBILE_HOMELAB_DIR="~/docker/mobile_homelab"
+DOCKER_DIR=~/docker
+MOBILE_HOMELAB_DIR=~/docker/mobile_homelab
 
 echo "setting up mobile_homelab"
 
@@ -43,10 +43,10 @@ else
     echo "traefik.key and traefik.crt already exist, skipping."
 fi
 
-TRAEFIK_NETWORK_OUTPUT=`docker network ls | awk '{print $2}' | grep --color=none traefik`
-if [ $TRAEFIK_NETWORK_OUTPUT != "traefik" ]; then
+TRAEFIK_NETWORK_OUTPUT=`sudo docker network ls | awk '{print $2}' | grep --color=none traefik`
+if [ "$TRAEFIK_NETWORK_OUTPUT" != "traefik" ]; then
     echo "setting up traefik network"
-    $DOCKER_BIN network create traefik
+    sudo $DOCKER_BIN network create traefik
 else
     echo "traefik network already exists, skipping."
 fi
@@ -54,7 +54,7 @@ fi
 for PROJECT in `find $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d`; do
     if [ ! -f "$PROJECT/.do_not_autorun" ]; then
         echo "starting docker-compose project in $PROJECT"
-        $DOCKER_COMPOSE_BIN -f $PROJECT up --build -d
+        sudo $DOCKER_COMPOSE_BIN -f $PROJECT up --build -d
     else
         echo "$PROJECT set to not auto-run, remove $PROJECT/.do_not_autorun if you want to change this."
     fi
