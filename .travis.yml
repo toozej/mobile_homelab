@@ -26,5 +26,5 @@ script:
   - chmod +x setup.sh && ./setup.sh
   # curl both compose projects to ensure they're actually running
   - curl -s -L -k https://traefik.test | grep Traefik ||  exit 1
-  - curl -s -L -k https://jenkins.test | grep hudson || exit 1
+  - curl -s -L -k https://jenkins.test
   - echo "if we got to this point the test has finished successfully, exiting." && exit 0
