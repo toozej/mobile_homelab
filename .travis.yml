@@ -24,6 +24,6 @@ before_install:
 
 script:
   - chmod +x setup.sh && ./setup.sh
-  # curl both compose projects to ensure they're returning 200 OKs
-  - curl -I -k https://traefik.test
-  - curl -I -k https://jenkins.test
+  # curl both compose projects to ensure they're actually running
+  - curl -s -L -k https://traefik.test | grep -q Traefik && echo "Traefik running" || echo "Traefik not running, exiting" && exit 1
+  - curl -s -L -k https://jenkins.test | grep -q hudson && echo "Jenkins running" || echo "Jenkins not running, exiting" && exit 1
