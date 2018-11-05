@@ -23,4 +23,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - chmod +x setup.sh && ./setup.sh 
+  - chmod +x setup.sh && ./setup.sh
+  # curl both compose projects to ensure they're returning 200 OKs
+  - curl -I -k https://traefik.test
+  - curl -I -k https://jenkins.test
