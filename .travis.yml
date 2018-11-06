@@ -24,7 +24,6 @@ before_install:
 
 script:
   - chmod +x setup.sh && ./setup.sh
-  - echo "waiting 30 seconds for compose-projects to fully start" && sleep 30
   # curl both compose projects to ensure they're actually running
   - curl -s -L -k https://traefik.test | grep Traefik ||  exit 1
   - curl -s -L -k https://jenkins.test | grep hudson || exit 1

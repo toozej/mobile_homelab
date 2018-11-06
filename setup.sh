@@ -60,5 +60,6 @@ for PROJECT in `find $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d -not -p
     fi
 done
 
+echo "sleeping 30 seconds to allow projects to fully spin up" && sleep 30
 JENKINS_PASSWORD=`sudo cat $MOBILE_HOMELAB_DIR/jenkins/jenkins_home/secrets/initialAdminPassword`
 echo "Jenkins initial admin password is: $JENKINS_PASSWORD"
