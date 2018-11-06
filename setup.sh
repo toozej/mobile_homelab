@@ -59,3 +59,6 @@ for PROJECT in `find $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d -not -p
         echo "$PROJECT set to not auto-run, remove $PROJECT/.do_not_autorun if you want to change this."
     fi
 done
+
+JENKINS_PASSWORD=`sudo cat $MOBILE_HOMELAB_DIR/jenkins/jenkins_home/secrets/initialAdminPassword`
+echo "Jenkins initial admin password is: $JENKINS_PASSWORD"
