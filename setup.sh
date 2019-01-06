@@ -25,15 +25,16 @@ else
     git pull
 fi
 
-HOSTFILE_ENTRY_TRAEFIK=`grep traefik.test /etc/hosts`
-HOSTFILE_ENTRY_JENKINS=`grep jenkins.test /etc/hosts`
-if [ -z "$HOSTFILE_ENTRY_TRAEFIK" ] || [ -z "$HOSTFILE_ENTRY_JENKINS" ]; then
-    echo "including hostfile entries"
-    echo "127.0.0.1 traefik.test" | sudo tee -a /etc/hosts
-    echo "127.0.0.1 jenkins.test" | sudo tee -a /etc/hosts
-else
-    echo "hostfile entries for traefik.test and jenkins.test already exist, skipping"
-fi
+echo "setting up hostfile entries for mobile_homelab projects"
+cd $MOBILE_HOMELAB_DIR
+for PROJECT in `find . -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'`; do
+    # remove prefix of "./"
+    ENTRY=${PROJECT:2}
+    # if there's not already a hostfile entry for $PROJECT, then add one
+    if ! grep -q "${ENTRY}.test" /etc/hosts; then
+        echo "127.0.0.1 ${ENTRY}.test" | sudo tee -a /etc/hosts
+    fi
+done
 
 if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/traefik.key" ] || [ ! -f "$MOBILE_HOMELAB_DIR/traefik/traefik.crt" ]; then
     echo "generating openssl key & crt for Traefik"

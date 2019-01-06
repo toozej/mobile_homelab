@@ -1,0 +1,21 @@
+version: '3'
+services:
+  www:
+    container_name: www
+    image: nginx:latest
+    restart: always
+    ports: 
+      - "8002:80"
+    labels: 
+      - "traefik.frontend.rule=Host:www.test"
+      - "traefik.frontend.headers.STSSeconds=31536000"
+    networks:
+      - traefik
+    volumes:
+      - "./config/default.conf:/etc/nginx/conf.d/default.conf"
+      - "./html:/var/www/html:ro"
+networks:
+  traefik:
+    external:
+      name: traefik
+
