@@ -1,5 +1,5 @@
 #Comment out when done.
-logLevel = "DEBUG"
+logLevel = "INFO"
 
 defaultEntryPoints = ["http","https"]
 
@@ -16,8 +16,8 @@ defaultEntryPoints = ["http","https"]
     address = ":443"
     [entryPoints.https.tls]
       [[entryPoints.https.tls.certificates]]
-      certFile = "/traefik.crt"
-      keyFile = "/traefik.key"
+      certFile = "/lab.test.crt"
+      keyFile = "/lab.test.key"
 
 # enable the Traefik dashboard
 [api]
@@ -27,5 +27,5 @@ defaultEntryPoints = ["http","https"]
 #Watch Docker, when new containers are created with label create mapping.
 [docker]
   endpoint = "unix:///var/run/docker.sock"
-  domain = "dev"
+  domain = "test"
   watch = true
