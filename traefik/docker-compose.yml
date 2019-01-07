@@ -16,7 +16,7 @@ services:
       - "./lab.test.crt:/lab.test.crt"
     labels:
       - "traefik.port=8080"
-      - "traefik.frontend.rule=Host:traefik.test"
+      - "traefik.frontend.rule=Host:traefik.lab.test"
 networks:
   traefik:
     external:

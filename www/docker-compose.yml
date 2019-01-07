@@ -7,7 +7,7 @@ services:
     ports: 
       - "8002:80"
     labels: 
-      - "traefik.frontend.rule=Host:www.test"
+      - "traefik.frontend.rule=Host:www.lab.test"
       - "traefik.frontend.headers.STSSeconds=31536000"
     networks:
       - traefik

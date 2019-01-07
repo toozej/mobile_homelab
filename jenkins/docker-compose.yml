@@ -8,7 +8,7 @@ services:
     privileged: true
     user: root
     labels:
-      - "traefik.frontend.rule=Host:jenkins.test"
+      - "traefik.frontend.rule=Host:jenkins.lab.test"
       - "traefik.docker.network=traefik"
     ports:
       - "8025:8080"

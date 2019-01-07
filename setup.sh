@@ -32,8 +32,8 @@ for PROJECT in `find . -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'`; do
     # remove prefix of "./"
     ENTRY=${PROJECT:2}
     # if there's not already a hostfile entry for $PROJECT, then add one
-    if ! grep -q "$ENTRY.test" /etc/hosts; then
-        echo "127.0.0.1 $ENTRY.test" | sudo tee -a /etc/hosts
+    if ! grep -q "$ENTRY.lab.test" /etc/hosts; then
+        echo "127.0.0.1 $ENTRY.lab.test" | sudo tee -a /etc/hosts
     fi
 done
 
@@ -41,6 +41,7 @@ if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/lab.test.key" ] || [ ! -f "$MOBILE_HOMELA
     echo "generating openssl key & crt for Traefik"
     cd $MOBILE_HOMELAB_DIR/traefik
 
+	# steps largely borrowed from https://gist.github.com/Soarez/9688998
     # generate lab.test key
     $OPENSSL_BIN genrsa -out lab.test.key 2048
     # verify lab.test key
@@ -65,7 +66,6 @@ if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/lab.test.key" ] || [ ! -f "$MOBILE_HOMELA
 
     # create bundle for browser
     cat lab.test.crt ca.crt > lab.test.bundle.crt
-    
 else
     echo "lab.test.key and lab.test.crt already exist, skipping."
 fi
