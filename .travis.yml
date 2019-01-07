@@ -16,7 +16,6 @@ before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update -qq
-  - sudo apt-get install -y ca-certificates
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -26,7 +25,7 @@ before_install:
 script:
   - chmod +x setup.sh && ./setup.sh
   # curl compose projects to ensure they're actually running
-  - curl -s --cacert traefik/lab.test.bundle.crt --capath=./ -L https://traefik.lab.test | grep Traefik ||  exit 1
-  - curl -s --cacert traefik/lab.test.bundle.crt --capath=./ -L https://jenkins.lab.test | grep hudson || exit 1
-  - curl -s --cacert traefik/lab.test.bundle.crt --capath=./ -L https://www.lab.test | grep Welcome || exit 1
+  - curl -s --capath=$HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://traefik.lab.test | grep Traefik ||  exit 1
+  - curl -s --capath=$HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://jenkins.lab.test | grep hudson || exit 1
+  - curl -s --capath=$HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://www.lab.test | grep Welcome || exit 1
   - echo "if we got to this point the test has finished successfully, exiting." && exit 0
