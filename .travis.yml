@@ -25,7 +25,7 @@ before_install:
 script:
   - chmod +x setup.sh && ./setup.sh
   # curl compose projects to ensure they're actually running
-  - curl -s --capath=$HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://traefik.lab.test | grep Traefik ||  exit 1
-  - curl -s --capath=$HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://jenkins.lab.test | grep hudson || exit 1
-  - curl -s --capath=$HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://www.lab.test | grep Welcome || exit 1
+  - curl -s --capath $HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://traefik.lab.test | grep Traefik ||  exit 1
+  - curl -s --capath $HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://jenkins.lab.test | grep hudson || exit 1
+  - curl -s --capath $HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://www.lab.test | grep Welcome || exit 1
   - echo "if we got to this point the test has finished successfully, exiting." && exit 0
