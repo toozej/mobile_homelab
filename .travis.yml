@@ -26,10 +26,8 @@ before_install:
 script:
   - chmod +x setup.sh && ./setup.sh
   # add self-signed certificates to trusted certificates store using https://stackoverflow.com/questions/17597457/why-wont-curl-recognise-a-self-signed-ssl-certificate/21262787#21262787 
-  - sudo cp $HOME/docker/mobile_homelab/traefik/lab.test.crt /usr/share/ca-certificates/
-  - sudo cp $HOME/docker/mobile_homelab/traefik/ca.crt /usr/share/ca-certificates/
-  - sudo echo "lab.test.crt" >> /etc/ca-certificates.conf
-  - sudo echo "ca.crt" >> /etc/ca-certificates.conf
+  - sudo cp $HOME/docker/mobile_homelab/traefik/lab.test.crt /usr/local/share/ca-certificates/
+  - sudo cp $HOME/docker/mobile_homelab/traefik/ca.crt /usr/local/share/ca-certificates/
   - sudo update-ca-certificates --fresh
   # curl compose projects to ensure they're actually running
   - curl -s -L https://traefik.lab.test | grep Traefik ||  exit 1
