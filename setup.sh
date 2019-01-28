@@ -68,7 +68,7 @@ if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/lab.test.key" ] || [ ! -f "$MOBILE_HOMELA
 
     # sign and create lab.test.crt
     $OPENSSL_BIN ca -batch -config ca.conf -out lab.test.crt -extfile lab.test.extensions.conf -in lab.test.csr
-    #$OPENSSL_BIN x509 -req -in lab.test.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out lab.test.crt
+    
     # verify lab.test.crt
     $OPENSSL_BIN x509 -in lab.test.crt -noout -text
     $OPENSSL_BIN verify -CAfile ca.crt lab.test.crt

@@ -16,6 +16,7 @@ before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update -qq
+  - sudo apt-get install libnss3-tools
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -24,8 +25,14 @@ before_install:
 
 script:
   - chmod +x setup.sh && ./setup.sh
+  # add self-signed certificates to trusted certificates store using https://stackoverflow.com/questions/17597457/why-wont-curl-recognise-a-self-signed-ssl-certificate/21262787#21262787 
+  - sudo cp $HOME/docker/mobile_homelab/traefik/lab.test.crt /usr/share/ca-certificates/
+  - sudo cp $HOME/docker/mobile_homelab/traefik/ca.crt /usr/share/ca-certificates/
+  - sudo echo "lab.test.crt" >> /etc/ca-certificates.conf
+  - sudo echo "ca.crt" >> /etc/ca-certificates.conf
+  - sudo update-ca-certificates –fresh
   # curl compose projects to ensure they're actually running
-  - curl -s --capath $HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://traefik.lab.test | grep Traefik ||  exit 1
-  - curl -s --capath $HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://jenkins.lab.test | grep hudson || exit 1
-  - curl -s --capath $HOME/docker/mobile_homelab/traefik/ --cacert lab.test.bundle.crt -L https://www.lab.test | grep Welcome || exit 1
+  - curl -s -L https://traefik.lab.test | grep Traefik ||  exit 1
+  - curl -s -L https://jenkins.lab.test | grep hudson || exit 1
+  - curl -s -L https://www.lab.test | grep Welcome || exit 1
   - echo "if we got to this point the test has finished successfully, exiting." && exit 0
