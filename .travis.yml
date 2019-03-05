@@ -33,4 +33,5 @@ script:
   - curl -s -L https://traefik.lab.test | grep Traefik ||  exit 1
   - curl -s -L https://jenkins.lab.test | grep hudson || exit 1
   - curl -s -L https://www.lab.test | grep Welcome || exit 1
+  - curl -s -L https://portainer.lab.test | grep Portainer || exit 1
   - echo "if we got to this point the test has finished successfully, exiting." && exit 0

@@ -1,0 +1,36 @@
+version: '3'
+services:
+  portainer_nginx:
+    build: nginx/
+    container_name: "portainer_nginx"
+    restart: always
+    depends_on:
+      - portainer_app
+    ports:
+      - "8012:80"
+    labels: 
+      - "traefik.frontend.rule=Host:portainer.lab.test"
+      - "traefik.frontend.headers.STSSeconds=31536000"
+      - "traefik.docker.network=traefik"
+    networks:
+      - backend
+      - traefik
+  portainer_app:
+    image: portainer/portainer:latest
+    container_name: "portainer_app"
+    restart: always
+#Automatically choose 'Manage the Docker instance where Portainer is running' by adding <--host=unix:///var/run/docker.sock> to the command
+    #command: --templates http://portainer_templates/templates.json
+    labels: 
+      - "traefik.enable=false"
+    networks:
+      - backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+networks:
+  traefik:
+    external:
+      name: traefik
+  backend:
+    driver: bridge
