@@ -60,7 +60,7 @@ if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/lab.test.key" ] || [ ! -f "$MOBILE_HOMELA
     $OPENSSL_BIN req -new -out lab.test.csr -config lab.test.conf
     # verify lab.test CSR
     $OPENSSL_BIN req -in lab.test.csr -noout -text
-    
+
     # generate root CA key
     $OPENSSL_BIN genrsa -out ca.key 2048
     # generate root CA cert
@@ -68,7 +68,7 @@ if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/lab.test.key" ] || [ ! -f "$MOBILE_HOMELA
 
     # sign and create lab.test.crt
     $OPENSSL_BIN ca -batch -config ca.conf -out lab.test.crt -extfile lab.test.extensions.conf -in lab.test.csr
-    
+
     # verify lab.test.crt
     $OPENSSL_BIN x509 -in lab.test.crt -noout -text
     $OPENSSL_BIN verify -CAfile ca.crt lab.test.crt
@@ -118,7 +118,20 @@ for PROJECT in `find $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d -not -p
 done
 
 
-# wait for projects to finish starting, and show Jenkins initial password
+# wait for projects to finish starting
 echo "sleeping 30 seconds to allow projects to fully spin up" && sleep 30
+
+
+# setup docker daemon to use mobile_homelab's registry server, registry.lab.test
+if [ -f /etc/docker/daemon.json ] && [ grep -q --color=none "registry.lab.test:5000" /etc/docker/daemon.json ]; then
+    # need to insert mobile_homelab registry
+    sudo echo -e '{\n  "insecure-registries" : ["registry.lab.test:5000"]\n}' >> /etc/docker/daemon.json
+elif [ ! -f /etc/docker/daemon.json ]; then
+    # need to copy the file
+    sudo cp config/daemon.json /etc/docker/daemon.json
+fi
+
+
+# show Jenkins initial password
 JENKINS_PASSWORD=`sudo cat $MOBILE_HOMELAB_DIR/jenkins/jenkins_home/secrets/initialAdminPassword`
 echo "Jenkins initial admin password is: $JENKINS_PASSWORD"
