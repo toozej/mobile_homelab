@@ -3,7 +3,7 @@ services:
   portainer_nginx:
     build: nginx/
     container_name: "portainer_nginx"
-    restart: always
+    restart: "no"
     depends_on:
       - portainer_app
     ports:
@@ -18,7 +18,7 @@ services:
   portainer_app:
     image: portainer/portainer:latest
     container_name: "portainer_app"
-    restart: always
+    restart: "no"
 #Automatically choose 'Manage the Docker instance where Portainer is running' by adding <--host=unix:///var/run/docker.sock> to the command
     #command: --templates http://portainer_templates/templates.json
     labels: 

@@ -3,7 +3,7 @@ services:
   www:
     container_name: www
     image: nginx:latest
-    restart: always
+    restart: "no"
     ports: 
       - "8002:80"
     labels: 

@@ -4,7 +4,7 @@ services:
     container_name: "jenkins"
     build: .
     # image: jenkinsci/blueocean:latest
-    restart: always
+    restart: "no"
     privileged: true
     user: root
     labels:
