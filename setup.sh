@@ -50,6 +50,10 @@ if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/lab.test.key" ] || [ ! -f "$MOBILE_HOMELA
     echo "generating openssl key & crt for Traefik"
     cd $MOBILE_HOMELAB_DIR/traefik
 
+    # setup files needed for generating certs below
+    touch index.txt
+    echo "01" > serial
+
     # steps largely borrowed from https://gist.github.com/Soarez/9688998
     # generate lab.test key
     $OPENSSL_BIN genrsa -out lab.test.key 2048
