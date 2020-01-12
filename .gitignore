@@ -1,2 +1,9 @@
 *.crt
 *.key
+*.csr
+index.txt
+index.txt*
+serial
+serial*
+*/data/
+*/jenkins_home/

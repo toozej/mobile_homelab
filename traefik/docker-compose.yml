@@ -4,6 +4,8 @@ services:
     image: traefik:1.7
     container_name: traefik
     restart: always
+    security_opt:
+      - no-new-privileges:true
     networks:
       - traefik
     ports:
@@ -11,12 +13,20 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./traefik.toml:/traefik.toml"
-      - "./lab.test.key:/lab.test.key"
-      - "./lab.test.crt:/lab.test.crt"
+      - "./traefik.yml:/etc/traefik/traefik.yml"
+      - "./dynamic.yml:/etc/traefik/dynamic.yml"
+      - "./lab.test.key:/etc/traefik/lab.test.key:ro"
+      - "./lab.test.crt:/etc/traefik/lab.test.crt:ro"
     labels:
-      - "traefik.port=8080"
-      - "traefik.frontend.rule=Host:traefik.lab.test"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.lab.test`)"
+      - "traefik.http.routers.traefik.middlewares=http-redirect-https@file,traefik-auth@file,headers@file"
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.lab.test`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth@file,headers@file"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
 networks:
   traefik:
     external:

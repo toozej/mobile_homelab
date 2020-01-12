@@ -1,0 +1,20 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: true
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+providers:
+  providersThrottleDuration: 2s
+  docker:
+    exposedbydefault: true
+    endpoint: unix:///var/run/docker.sock
+  file:
+    watch: true
+    filename: "/etc/traefik/dynamic.yml"
+api:
+  dashboard: true
+log:
+  level: DEBUG
