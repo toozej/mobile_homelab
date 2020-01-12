@@ -1,9 +1,9 @@
 version: '3'
 services:
   traefik:
-    image: traefik:1.7
+    image: traefik:latest
     container_name: traefik
-    restart: always
+    restart: "no"
     security_opt:
       - no-new-privileges:true
     networks:
