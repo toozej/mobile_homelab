@@ -3,22 +3,18 @@ global:
   sendAnonymousUsage: true
 entryPoints:
   http:
-    address: :80
+    address: ":80"
   https:
-    address: :443
-  traefik:
-    address: :8080
+    address: ":443"
 providers:
   providersThrottleDuration: 2s
   docker:
-    watch: true
+    exposedbydefault: true
     endpoint: unix:///var/run/docker.sock
-    swarmModeRefreshSeconds: 15s
   file:
     watch: true
     filename: "/etc/traefik/dynamic.yml"
 api:
-  insecure: true
   dashboard: true
 log:
   level: DEBUG

@@ -8,8 +8,14 @@ services:
     privileged: true
     user: root
     labels:
-      - "traefik.frontend.rule=Host:jenkins.lab.test"
       - "traefik.docker.network=traefik"
+      - "traefik.http.routers.jenkins.entrypoints=http"
+      - "traefik.http.routers.jenkins.rule=Host(`jenkins.lab.test`)"
+      - "traefik.http.routers.jenkins.middlewares=http-redirect-https@file,headers@file"
+      - "traefik.http.routers.jenkins-secure.entrypoints=https"
+      - "traefik.http.routers.jenkins-secure.rule=Host(`jenkins.lab.test`)"
+      - "traefik.http.routers.jenkins-secure.middlewares=headers@file"
+      - "traefik.http.routers.jenkins-secure.tls=true"
     ports:
       - "8025:8080"
       - "8026:50000"

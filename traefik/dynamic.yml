@@ -2,32 +2,33 @@ providers:
   file: {}
 
 http:
-  routers:
-      api:
-        rule: "Host(`traefik.lab.test`)"
-        service: api@internal
-        middlewares:
-          - traefik-auth
-      main-router:
-        rule: "Host(`lab.test`)"
-        service: service-id
-        tls:
-          options: myTLSOptions
   middlewares:
-    http-to-https-always:
+    headers:
+      headers:
+        stsSeconds: 31536000
+    http-redirect-https:
       redirectScheme:
         scheme: https
+        permanent: true
     traefik-auth:
       basicAuth:
         users:
+          # traefik/traefik
           - "traefik:$2y$05$.OGZj9VROg8iYJtv.QcQCuJOxNWM1nk18BI45XIkofEdZNQ8IOsjK"
 tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/lab.test.crt
+        keyFile: /etc/traefik/lab.test.key
   certificates:
-    - certFile: /lab.test.crt
-      keyFile: /lab.test.key
+    - certFile: /etc/traefik/lab.test.crt
+      keyFile: /etc/traefik/lab.test.key
+      stores:
+        - default
   options:
     myTLSOptions:
-      minVersion: VersionTLS13
+      minVersion: VersionTLS12
       cipherSuites:
         - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
