@@ -17,6 +17,7 @@ services:
       - "./dynamic.yml:/etc/traefik/dynamic.yml"
       - "./lab.test.key:/etc/traefik/lab.test.key:ro"
       - "./lab.test.crt:/etc/traefik/lab.test.crt:ro"
+      - "./log/access.log:/var/log/traefik/access.log"
     labels:
       - "traefik.docker.network=traefik"
       - "traefik.http.routers.traefik.entrypoints=http"

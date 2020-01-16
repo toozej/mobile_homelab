@@ -1,0 +1,74 @@
+---
+version: '3.0'
+services:
+
+  influxdb:
+    image: influxdb:alpine
+    restart: always
+    container_name: influxdb
+    hostname: influxdb
+    env_file:
+      - tick.env
+    ports:
+      - "8086:8086"
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - ./config/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+      - ./influxdb:/var/lib/influxdb:rw
+    networks:
+      - traefik
+      - tick
+
+  chronograf:
+    image: chronograf:alpine
+    restart: always
+    container_name: chronograf
+    hostname: chronograf
+    env_file:
+      - tick.env
+    ports:
+      - "8888:8888"
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.chronograf.entrypoints=http"
+      - "traefik.http.routers.chronograf.rule=Host(`tick.lab.test`)"
+      - "traefik.http.routers.chronograf.middlewares=http-redirect-https@file,headers@file"
+      - "traefik.http.routers.chronograf-secure.entrypoints=https"
+      - "traefik.http.routers.chronograf-secure.rule=Host(`tick.lab.test`)"
+      - "traefik.http.routers.chronograf-secure.middlewares=headers@file"
+      - "traefik.http.routers.chronograf-secure.tls=true"
+    volumes:
+      - ./chronograf:/var/lib/chronograf:rw
+    depends_on:
+      - influxdb
+    networks:
+      - traefik
+      - tick
+
+  kapacitor:
+    image: kapacitor:alpine
+    restart: always
+    container_name: kapacitor
+    hostname: kapacitor
+    env_file:
+      - tick.env
+    ports:
+      - "9092:9092"
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - ./config/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
+      - ./kapacitor:/var/lib/kapacitor:rw
+    depends_on:
+      - influxdb
+    networks:
+      - tick
+
+networks:
+  traefik:
+    external:
+      name: traefik
+  tick:
+    external:
+      name: tick

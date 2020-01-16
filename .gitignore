@@ -7,3 +7,7 @@ serial
 serial*
 */data/
 */jenkins_home/
+*/log/*
+*/influxdb/*
+*/kapacitor/*
+*/chronograf/*

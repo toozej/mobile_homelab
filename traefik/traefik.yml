@@ -1,3 +1,4 @@
+---
 global:
   checkNewVersion: true
   sendAnonymousUsage: true
@@ -18,3 +19,12 @@ api:
   dashboard: true
 log:
   level: DEBUG
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+metrics:
+  influxDB:
+    address: http://influxdb:8086
+    username: "admin"
+    password: "influxdbpassword"
+    database: "traefik"
+    protocol: http
