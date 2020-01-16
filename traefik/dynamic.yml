@@ -15,6 +15,11 @@ http:
         users:
           # traefik/traefik
           - "traefik:$2y$05$.OGZj9VROg8iYJtv.QcQCuJOxNWM1nk18BI45XIkofEdZNQ8IOsjK"
+    lan-whitelist:
+      ipWhiteList:
+        sourceRange:
+          - "192.168.1.0/24"
+          - "127.0.0.1/32"
 tls:
   stores:
     default:

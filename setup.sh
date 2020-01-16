@@ -109,6 +109,15 @@ else
     echo "traefik network already exists, skipping."
 fi
 
+# create the tick network if not already created
+TICK_NETWORK_OUTPUT=`sudo docker network ls | awk '{print $2}' | grep --color=none tick`
+if [ "$TICK_NETWORK_OUTPUT" != "tick" ]; then
+    echo "setting up tick network"
+    sudo $DOCKER_BIN network create tick
+else
+    echo "tick network already exists, skipping."
+fi
+
 
 # pull images, build and start up projects
 for PROJECT in `find $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'`; do
