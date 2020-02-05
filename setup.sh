@@ -100,23 +100,16 @@ fi
 $CERTUTIL_BIN -d sql:$HOME/.pki/nssdb -A -n '*.lab.test wildcard certificate' -i $MOBILE_HOMELAB_DIR/traefik/lab.test.bundle.crt -t TCP,TCP,TCP
 
 
-# create the Traefik network if not already created
-TRAEFIK_NETWORK_OUTPUT=`sudo docker network ls | awk '{print $2}' | grep --color=none traefik`
-if [ "$TRAEFIK_NETWORK_OUTPUT" != "traefik" ]; then
-    echo "setting up traefik network"
-    sudo $DOCKER_BIN network create traefik
-else
-    echo "traefik network already exists, skipping."
-fi
-
-# create the tick network if not already created
-TICK_NETWORK_OUTPUT=`sudo docker network ls | awk '{print $2}' | grep --color=none tick`
-if [ "$TICK_NETWORK_OUTPUT" != "tick" ]; then
-    echo "setting up tick network"
-    sudo $DOCKER_BIN network create tick
-else
-    echo "tick network already exists, skipping."
-fi
+# create the Docker networks if not already created
+for NETWORK_NAME in traefik tick docker-socket-proxy; do
+    NETWORK_OUTPUT=`sudo docker network ls | awk '{print $2}' | grep --color=none ${NETWORK_NAME}`
+    if [ "$NETWORK_OUTPUT" != "${NETWORK_NAME}" ]; then
+        echo "setting up ${NETWORK_NAME} network"
+        sudo $DOCKER_BIN network create ${NETWORK_NAME}
+    else
+        echo "${NETWORK_NAME} network already exists, skipping."
+    fi
+done
 
 
 # pull images, build and start up projects

@@ -1,0 +1,18 @@
+version: '3'
+services:
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    container_name: docker-socket-proxy
+    restart: "no"
+    networks:
+      - docker-socket-proxy
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    labels:
+      - "traefik.enable=false"
+    env_file:
+      - docker-socket-proxy.env
+networks:
+  docker-socket-proxy:
+    external:
+      name: docker-socket-proxy

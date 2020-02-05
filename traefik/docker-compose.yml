@@ -6,13 +6,15 @@ services:
     restart: "no"
     security_opt:
       - no-new-privileges:true
+    depends_on:
+      - docker-socket-proxy
     networks:
       - traefik
+      - docker-socket-proxy
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
       - "./traefik.yml:/etc/traefik/traefik.yml"
       - "./dynamic.yml:/etc/traefik/dynamic.yml"
       - "./lab.test.key:/etc/traefik/lab.test.key:ro"
@@ -32,3 +34,6 @@ networks:
   traefik:
     external:
       name: traefik
+  docker-socket-proxy:
+    external:
+      name: docker-socket-proxy
