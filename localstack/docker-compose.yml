@@ -1,0 +1,37 @@
+version: '3'
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack:latest
+    restart: "no"
+    ports:
+      - "4566-4599:4566-4599"
+      - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
+    environment:
+      - SERVICES=${SERVICES- }
+      - DEBUG=1
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOST_TMP_FOLDER=${TMPDIR}
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.localstack.entrypoints=http"
+      - "traefik.http.routers.localstack.rule=Host(`localstack.lab.test`)"
+      - "traefik.http.routers.localstack.middlewares=http-redirect-https@file,headers@file"
+      - "traefik.http.routers.localstack-secure.entrypoints=https"
+      - "traefik.http.routers.localstack-secure.rule=Host(`localstack.lab.test`)"
+      - "traefik.http.routers.localstack-secure.middlewares=headers@file"
+      - "traefik.http.routers.localstack-secure.tls=true"
+    networks:
+      - traefik
+networks:
+  traefik:
+    external:
+      name: traefik
+

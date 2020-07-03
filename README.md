@@ -7,6 +7,7 @@ It aims to be easy to setup with an automated installation process, and easy to 
 
 1. docker and docker-compose installed (`which docker` and `which docker-compose` return something valid)
 2. openssl command-line tools installed (`which openssl` returns something valid)
+2. aws-cli command-line tools installed (`which aws` returns something valid)
 
 ## Automated first time setup
 
@@ -19,8 +20,10 @@ It aims to be easy to setup with an automated installation process, and easy to 
 2. [NGINX][nginx] for a quick and basic web server
 3. [Jenkins X][jenkins] for building packages, CI/CD, etc.
 4. [Portainer][portainer] to provide a quick way to provision other tools and services
+4. [Localstack][localstack] to mock AWS services for local development and testing
 
 [traefik]: https://hub.docker.com/_/traefik
 [nginx]: https://hub.docker.com/_/nginx
 [jenkins]: https://hub.docker.com/_/jenkins
 [portainer]: https://hub.docker.com/portainer/portainer
+[localstack]: https://github.com/localstack/localstack
