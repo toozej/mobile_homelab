@@ -4,7 +4,6 @@ antisamy-markup-formatter
 apache-httpcomponents-client-4-api
 async-http-client
 build-failure-analyzer
-build-flow-plugin
 cloudbees-folder
 conditional-buildstep
 config-file-provider
