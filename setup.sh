@@ -132,6 +132,6 @@ done
 
 
 # wait for projects to finish starting, and show Jenkins initial password
-echo "sleeping 30 seconds to allow projects to fully spin up" && sleep 30
+echo "sleeping 60 seconds to allow projects to fully spin up" && sleep 60
 JENKINS_PASSWORD=`sudo cat $MOBILE_HOMELAB_DIR/jenkins/jenkins_home/secrets/initialAdminPassword`
 echo "Jenkins initial admin password is: $JENKINS_PASSWORD"
