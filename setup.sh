@@ -6,8 +6,8 @@ OPENSSL_BIN=`which openssl`
 CERTUTIL_BIN=`which certutil`
 
 # paths to be used
-DOCKER_DIR=~/docker
-MOBILE_HOMELAB_DIR=~/docker/mobile_homelab
+DOCKER_DIR=$HOME/docker
+MOBILE_HOMELAB_DIR=$HOME/docker/mobile_homelab
 
 echo "setting up mobile_homelab"
 
@@ -79,6 +79,9 @@ if [ ! -f "$MOBILE_HOMELAB_DIR/traefik/lab.test.key" ] || [ ! -f "$MOBILE_HOMELA
 
     # create bundle for browser
     cat lab.test.crt ca.crt > lab.test.bundle.crt
+
+    cd ${MOBILE_HOMELAB_DIR}/tls
+    make all
 else
     echo "lab.test.key and lab.test.crt already exist, skipping."
 fi
@@ -118,9 +121,18 @@ else
     echo "tick network already exists, skipping."
 fi
 
+# create the haproxy network if not already created
+HAPROXY_NETWORK_OUTPUT=`sudo docker network ls | awk '{print $2}' | grep --color=none haproxy`
+if [ "$HAPROXY_NETWORK_OUTPUT" != "haproxy" ]; then
+    echo "setting up haproxy network"
+    sudo $DOCKER_BIN network create haproxy
+else
+    echo "haproxy network already exists, skipping."
+fi
+
 
 # pull images, build and start up projects
-for PROJECT in `find $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'`; do
+for PROJECT in `find -L $MOBILE_HOMELAB_DIR -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'`; do
     if [ ! -f "$PROJECT/.do_not_autorun" ]; then
         echo "starting docker-compose project in $PROJECT"
         sudo $DOCKER_COMPOSE_BIN -f $PROJECT/docker-compose.yml pull --ignore-pull-failures

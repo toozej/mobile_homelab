@@ -1,5 +1,10 @@
 providers:
-  file: {}
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: true
+  file:
+    filename: "/etc/traefik/routes.yml"
+    watch: true
 
 http:
   middlewares:

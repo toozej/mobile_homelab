@@ -15,6 +15,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./traefik.yml:/etc/traefik/traefik.yml"
       - "./dynamic.yml:/etc/traefik/dynamic.yml"
+      - "./routes.yml:/etc/traefik/routes.yml"
       - "./lab.test.key:/etc/traefik/lab.test.key:ro"
       - "./lab.test.crt:/etc/traefik/lab.test.crt:ro"
       - "./log/access.log:/var/log/traefik/access.log"

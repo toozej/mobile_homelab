@@ -1,0 +1,34 @@
+---
+version: "3"
+services:
+  haproxy:
+    container_name: haproxy
+    image: haproxy:2.4
+    hostname: haproxy
+    restart: unless-stopped
+    ports:
+      - "8003:70" # haproxy stats port
+      - "8004:3000" # webUI over port 443
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.haproxy.entrypoints=http"
+      - "traefik.http.routers.haproxy.rule=Host(`haproxy.lab.test`)"
+      - "traefik.http.routers.haproxy.middlewares=http-redirect-https@file,headers@file"
+      - "traefik.http.routers.haproxy-secure.entrypoints=https"
+      - "traefik.http.routers.haproxy-secure.rule=Host(`haproxy.lab.test`)"
+      - "traefik.http.routers.haproxy-secure.middlewares=headers@file"
+      - "traefik.http.routers.haproxy-secure.tls=true"
+    networks:
+      - traefik
+      - haproxy
+    volumes:
+      - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+      - "./backend.map:/usr/local/etc/haproxy/backend.map"
+      - "../tls:/etc/pki/tls"
+networks:
+  haproxy:
+    external:
+      name: haproxy
+  traefik:
+    external:
+      name: traefik

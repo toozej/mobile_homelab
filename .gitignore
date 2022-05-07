@@ -1,5 +1,6 @@
 *.crt
 *.key
+*.pem
 *.csr
 index.txt
 index.txt*

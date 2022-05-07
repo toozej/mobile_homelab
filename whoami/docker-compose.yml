@@ -1,0 +1,18 @@
+---
+version: '3'
+services:
+  whoami:
+    container_name: whoami
+    image: containous/whoami
+    restart: "unless-stopped"
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - haproxy
+    volumes:
+      - "../tls/whoami:/certs"
+    command: whoami --cert /certs/whoami-ca-combined.pem --key /certs/whoami-key.pem
+networks:
+  haproxy:
+    external:
+      name: haproxy
