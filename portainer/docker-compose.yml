@@ -1,3 +1,4 @@
+---
 version: '3'
 services:
   portainer_nginx:
@@ -6,8 +7,6 @@ services:
     restart: "no"
     depends_on:
       - portainer_app
-    ports:
-      - "8012:80"
     labels: 
       - "traefik.docker.network=traefik"
       - "traefik.http.routers.portainer.entrypoints=http"
@@ -21,7 +20,7 @@ services:
       - backend
       - traefik
   portainer_app:
-    image: portainer/portainer:latest
+    image: portainer/portainer-ce:latest
     container_name: "portainer_app"
     restart: "no"
 #Automatically choose 'Manage the Docker instance where Portainer is running' by adding <--host=unix:///var/run/docker.sock> to the command
@@ -35,7 +34,6 @@ services:
       - ./data:/data
 networks:
   traefik:
-    external:
-      name: traefik
+    external: true
   backend:
     driver: bridge

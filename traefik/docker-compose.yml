@@ -1,3 +1,4 @@
+---
 version: '3'
 services:
   traefik:
@@ -30,5 +31,4 @@ services:
       - "traefik.http.routers.traefik-secure.service=api@internal"
 networks:
   traefik:
-    external:
-      name: traefik
+    external: true

@@ -67,8 +67,6 @@ services:
 
 networks:
   traefik:
-    external:
-      name: traefik
+    external: true
   tick:
-    external:
-      name: tick
+    external: true

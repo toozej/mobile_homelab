@@ -1,11 +1,10 @@
+---
 version: '3'
 services:
   www:
     container_name: www
     image: nginx:latest
     restart: "no"
-    ports: 
-      - "8002:80"
     labels:
       - "traefik.docker.network=traefik"
       - "traefik.http.routers.www.entrypoints=http"
@@ -22,6 +21,4 @@ services:
       - "./html:/var/www/html:ro"
 networks:
   traefik:
-    external:
-      name: traefik
-
+    external: true
