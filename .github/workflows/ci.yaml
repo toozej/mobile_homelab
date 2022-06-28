@@ -1,0 +1,48 @@
+---
+name: CI
+'on':
+  workflow_dispatch:
+  pull_request:
+  push:
+  schedule:
+    - cron: "0 1 * * 1"
+
+jobs:
+
+  check:
+    name: Check
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v3
+
+      - name: Install check dependencies.
+        run: sudo apt-get install -y shellcheck
+
+      - name: Check code syntax.
+        run: |
+          bash -n *.sh
+          shellcheck *.sh
+
+  test:
+    name: Test
+    #needs: check
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v3
+
+      - name: Install pre-reqs
+        run: sudo apt-get update && sudo apt-get install -y libnss3-tools ca-certificates
+
+      - name: Setup test environment
+        run: |
+          chmod +x setup.sh && ./setup.sh
+          # add self-signed certificates to trusted certificates store using https://stackoverflow.com/questions/17597457/why-wont-curl-recognise-a-self-signed-ssl-certificate/21262787#21262787 
+          sudo cp $HOME/docker/mobile_homelab/traefik/lab.test.crt /usr/local/share/ca-certificates/
+          sudo cp $HOME/docker/mobile_homelab/traefik/ca.crt /usr/local/share/ca-certificates/
+          sudo update-ca-certificates --fresh
+
+      - name: Run tests
+        run: chmod +x tests.sh && ./tests.sh
