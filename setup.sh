@@ -1,9 +1,9 @@
 #!/bin/bash
 # binaries to be used
-DOCKER_BIN=$(which docker)
-DOCKER_COMPOSE_BIN=$(which docker-compose)
-OPENSSL_BIN=$(which openssl)
-CERTUTIL_BIN=$(which certutil)
+DOCKER_BIN=$(command -v docker)
+DOCKER_COMPOSE_BIN=$(command -v docker-compose)
+OPENSSL_BIN=$(command -v openssl)
+CERTUTIL_BIN=$(command -v certutil)
 
 # paths to be used
 DOCKER_DIR="${HOME}"/docker
