@@ -22,7 +22,8 @@ jobs:
       - name: Check code syntax.
         run: |
           bash -n *.sh
-          shellcheck *.sh
+          # SC2044 - For loops over find output are fragile. Use find -exec or a while read loop.
+          shellcheck -e SC2044 *.sh
 
   test:
     name: Test
