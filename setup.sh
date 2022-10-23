@@ -9,6 +9,36 @@ CERTUTIL_BIN=$(command -v certutil)
 DOCKER_DIR="${HOME}"/docker
 MOBILE_HOMELAB_DIR="${HOME}"/docker/mobile_homelab
 
+MINIMAL=false
+
+# help/usage information
+function usage {
+    echo "Usage: ./setup.sh [--minimal | -m] [--help | -h] "
+    echo ""
+    echo "  --minimal | -m          Run minimal mobile_homelab, just Traefik container."
+    echo ""
+    echo "  -h | --help                        Display usage."
+}
+
+# get user input
+while :; do
+  case $1 in
+    -h | --help)
+      usage
+      exit 1
+      ;;
+    -m | --minimal)
+      MINIMAL=true
+      ;;
+    ?)
+      usage
+      exit 1
+      ;;
+    *) break
+  esac
+  shift
+done
+
 echo "setting up mobile_homelab"
 
 
@@ -120,18 +150,25 @@ fi
 
 
 # pull images, build and start up projects
-for PROJECT in $(find "${MOBILE_HOMELAB_DIR}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'); do
-    if [ ! -f "${PROJECT}/.do_not_autorun" ]; then
-        echo "starting docker-compose project in ${PROJECT}"
-        sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
-        sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" up --build -d
-    else
-        echo "${PROJECT} set to not auto-run, remove ${PROJECT}/.do_not_autorun if you want to change this."
-    fi
-done
-
-
-# wait for projects to finish starting, and show Jenkins initial password
-echo "sleeping 60 seconds to allow projects to fully spin up" && sleep 60
-JENKINS_PASSWORD=$(sudo cat "${MOBILE_HOMELAB_DIR}"/jenkins/jenkins_home/secrets/initialAdminPassword)
-echo "Jenkins initial admin password is: ${JENKINS_PASSWORD}"
+if [[ ${MINIMAL} == "false" ]]; then
+    for PROJECT in $(find "${MOBILE_HOMELAB_DIR}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'); do
+        if [ ! -f "${PROJECT}/.do_not_autorun" ]; then
+            echo "starting docker-compose project in ${PROJECT}"
+            sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
+            sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" up --build -d
+        else
+            echo "${PROJECT} set to not auto-run, remove ${PROJECT}/.do_not_autorun if you want to change this."
+        fi
+    done
+    
+    # wait for projects to finish starting, and show Jenkins initial password
+    echo "sleeping 60 seconds to allow projects to fully spin up" && sleep 60
+    JENKINS_PASSWORD=$(sudo cat "${MOBILE_HOMELAB_DIR}"/jenkins/jenkins_home/secrets/initialAdminPassword)
+    echo "Jenkins initial admin password is: ${JENKINS_PASSWORD}"
+else
+    echo "minimal mode activated"
+    PROJECT="traefik"
+    echo "starting docker-compose project in ${PROJECT}"
+    sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
+    sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" up --build -d
+fi
