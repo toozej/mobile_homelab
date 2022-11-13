@@ -1,7 +1,6 @@
 #!/bin/bash
 # binaries to be used
 DOCKER_BIN=$(command -v docker)
-DOCKER_COMPOSE_BIN=$(command -v docker-compose)
 OPENSSL_BIN=$(command -v openssl)
 CERTUTIL_BIN=$(command -v certutil)
 
@@ -131,19 +130,19 @@ fi
 
 
 # create the Traefik network if not already created
-TRAEFIK_NETWORK_OUTPUT=$(sudo docker network ls | awk '{print $2}' | grep --color=none traefik)
+TRAEFIK_NETWORK_OUTPUT=$(docker network ls | awk '{print $2}' | grep --color=none traefik)
 if [ "${TRAEFIK_NETWORK_OUTPUT}" != "traefik" ]; then
     echo "setting up traefik network"
-    sudo "${DOCKER_BIN}" network create traefik
+    "${DOCKER_BIN}" network create traefik
 else
     echo "traefik network already exists, skipping."
 fi
 
 # create the tick network if not already created
-TICK_NETWORK_OUTPUT=$(sudo docker network ls | awk '{print $2}' | grep --color=none tick)
+TICK_NETWORK_OUTPUT=$(docker network ls | awk '{print $2}' | grep --color=none tick)
 if [ "${TICK_NETWORK_OUTPUT}" != "tick" ]; then
     echo "setting up tick network"
-    sudo "${DOCKER_BIN}" network create tick
+    "${DOCKER_BIN}" network create tick
 else
     echo "tick network already exists, skipping."
 fi
@@ -154,8 +153,8 @@ if [[ ${MINIMAL} == "false" ]]; then
     for PROJECT in $(find "${MOBILE_HOMELAB_DIR}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'); do
         if [ ! -f "${PROJECT}/.do_not_autorun" ]; then
             echo "starting docker-compose project in ${PROJECT}"
-            sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
-            sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" up --build -d
+            /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
+            /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" up --build -d
         else
             echo "${PROJECT} set to not auto-run, remove ${PROJECT}/.do_not_autorun if you want to change this."
         fi
@@ -169,6 +168,6 @@ else
     echo "minimal mode activated"
     PROJECT="traefik"
     echo "starting docker-compose project in ${PROJECT}"
-    sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
-    sudo "${DOCKER_COMPOSE_BIN}" -f "${PROJECT}/docker-compose.yml" up --build -d
+    /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
+    /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" up --build -d
 fi

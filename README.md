@@ -5,9 +5,13 @@ It aims to be easy to setup with an automated installation process, and easy to 
 
 ## Pre-reqs
 
-1. docker and docker-compose installed (`which docker` and `which docker-compose` return something valid)
-2. openssl command-line tools installed (`which openssl` returns something valid)
-2. aws-cli command-line tools installed (`which aws` returns something valid)
+1. docker and docker compose v2 installed (`which docker` and `docker compose version` return something valid)
+2. your user is part of `docker` group following https://docs.docker.com/engine/install/linux-postinstall/
+    - `sudo groupadd docker`
+    - `sudo usermod -aG docker $USER`
+    - `newgrp docker`
+3. openssl command-line tools installed (`which openssl` returns something valid)
+4. aws-cli command-line tools installed (`which aws` returns something valid)
 
 ## Automated first time setup
 

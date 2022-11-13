@@ -11,7 +11,7 @@ jobs:
 
   check:
     name: Check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v3
@@ -28,14 +28,26 @@ jobs:
   test:
     name: Test
     #needs: check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v3
 
       - name: Install pre-reqs
-        run: sudo apt-get update && sudo apt-get install -y libnss3-tools ca-certificates
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3-tools ca-certificates curl gnupg lsb-release
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          sudo chmod a+r /etc/apt/keyrings/docker.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          sudo usermod -aG docker $(whoami)
+          newgrp docker
 
       - name: Setup test environment
         run: |
