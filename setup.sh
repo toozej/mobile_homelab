@@ -153,8 +153,8 @@ if [[ ${MINIMAL} == "false" ]]; then
     for PROJECT in $(find "${MOBILE_HOMELAB_DIR}" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*'); do
         if [ ! -f "${PROJECT}/.do_not_autorun" ]; then
             echo "starting docker-compose project in ${PROJECT}"
-            /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
-            /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" up --build -d
+            ${DOCKER_BIN} compose -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
+            ${DOCKER_BIN} compose -f "${PROJECT}/docker-compose.yml" up --build -d
         else
             echo "${PROJECT} set to not auto-run, remove ${PROJECT}/.do_not_autorun if you want to change this."
         fi
@@ -168,6 +168,6 @@ else
     echo "minimal mode activated"
     PROJECT="traefik"
     echo "starting docker-compose project in ${PROJECT}"
-    /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
-    /usr/bin/docker compose -f "${PROJECT}/docker-compose.yml" up --build -d
+    ${DOCKER_BIN} compose -f "${PROJECT}/docker-compose.yml" pull --ignore-pull-failures
+    ${DOCKER_BIN} compose -f "${PROJECT}/docker-compose.yml" up --build -d
 fi

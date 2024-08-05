@@ -1,0 +1,25 @@
+- add OS detection to setup.sh from Ansible's bootstrap.sh
+
+- consider using github.com/filosottile/mkcert for generating and installing certificates along with nss
+
+- if not wanting to use mkcert, add support for MacOS to setup.sh the old fashioned way
+    - programmatically add CA cert to MacOS keychain
+    ```
+    # Import the CA certificate to the System keychain
+    sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /path/to/ca.crt
+    ```
+    - programmatically import certs to Firefox
+    ```
+    # get certutil from nss package
+    brew install nss
+    # get firefox profile dir
+    FIREFOX_PROFILE_DIR=$(find $HOME/Library/Application\ Support/Firefox/Profiles -name "*.default-release")
+    # import CA cert
+    certutil -A -n "My CA" -t "CT,c,c" -i /path/to/ca.crt -d sql:"$FIREFOX_PROFILE_DIR"
+    # import wildcard cert
+    certutil -A -n "*.lab.test" -t "P,p,p" -i /path/to/wildcard.lab.test.crt -d sql:"$FIREFOX_PROFILE_DIR"
+    ```
+
+- test new additions on both horacio and louis
+
+- update tick to latest versions
